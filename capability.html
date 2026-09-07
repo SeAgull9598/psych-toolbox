@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>心理工具箱 · 能力画像</title>
+<style>
+  :root{
+    --bg:#F4EFE9;
+    --card:#FFFDFA;
+    --ink:#3A3A38;
+    --ink-soft:#6E6B66;
+    --muted:#9A958C;
+    --accent:#C9A36A;        /* 暖金 */
+    --accent-deep:#8A6D3F;
+    --accent-soft:#FBF3E6;
+    --sage:#9DB39A;          /* 柔和鼠尾草绿 */
+    --sage-deep:#5F7A66;
+    --sage-soft:#EEF3EC;
+    --line:#ECE5DA;
+    --blue:#7B9AA6;          /* 成长区标示 */
+    --blue-soft:#EAF1F3;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:28px 18px 60px;}
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:26px 22px;
+    box-shadow:0 6px 24px rgba(140,109,63,0.06);
+  }
+
+  /* ---------- 顶部标题 ---------- */
+  .hero{text-align:center;margin-bottom:22px;}
+  .hero .badge{
+    display:inline-block;background:var(--accent-soft);color:var(--accent-deep);
+    font-size:12px;letter-spacing:2px;padding:5px 14px;border-radius:999px;
+    border:1px solid var(--line);
+  }
+  .hero h1{font-size:26px;margin:14px 0 6px;letter-spacing:1px;font-weight:600;}
+  .hero p{margin:0;color:var(--ink-soft);font-size:14px;}
+
+  /* ---------- 须知 ---------- */
+  .intro-title{font-size:19px;margin:0 0 4px;font-weight:600;}
+  .intro-lead{margin:0 0 16px;color:var(--ink-soft);font-size:14px;}
+  .intro-body{font-size:15px;color:var(--ink);}
+  .intro-body p{margin:0 0 12px;}
+  .scale-preview{margin:18px 0 4px;padding:14px 16px;background:var(--sage-soft);border-radius:14px;font-size:13.5px;color:var(--sage-deep);}
+  .scale-preview b{color:var(--ink);}
+  .intro-actions{margin-top:22px;text-align:center;}
+
+  /* ---------- 按钮 ---------- */
+  .btn{
+    font-family:inherit;font-size:15px;cursor:pointer;
+    border-radius:999px;padding:11px 22px;border:1px solid var(--line);
+    background:#fff;color:var(--ink-soft);transition:all .18s ease;
+  }
+  .btn:hover{border-color:var(--accent);color:var(--accent-deep);}
+  .btn:disabled{opacity:.42;cursor:not-allowed;border-color:var(--line);color:var(--muted);}
+  .btn-primary{
+    background:linear-gradient(135deg,var(--accent),#D8B57E);
+    color:#FFFFFF;border-color:transparent;font-weight:600;
+    box-shadow:0 6px 18px rgba(201,163,106,0.28);
+  }
+  .btn-primary:hover{color:#fff;transform:translateY(-1px);box-shadow:0 8px 22px rgba(201,163,106,0.36);}
+  .btn-primary:disabled{background:var(--line);color:var(--muted);box-shadow:none;transform:none;}
+  .btn-ghost{background:transparent;}
+  .btn-sm{font-size:13px;padding:8px 16px;}
+
+  /* ---------- 进度 ---------- */
+  .progress{height:6px;border-radius:6px;background:var(--line);overflow:hidden;margin-bottom:10px;}
+  .progress > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--sage));border-radius:6px;transition:width .35s ease;}
+  .meta{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:16px;}
+  .meta b{color:var(--accent-deep);}
+
+  /* ---------- 题目 ---------- */
+  .q-part{font-size:12.5px;color:var(--accent-deep);letter-spacing:.6px;margin-bottom:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+  .q-part .chip{background:var(--accent-soft);border-radius:999px;padding:2px 10px;}
+  .q-part .chip2{background:var(--sage-soft);color:var(--sage-deep);border-radius:999px;padding:2px 10px;}
+  .q-title{font-size:18px;font-weight:600;margin:0 0 20px;color:var(--ink);line-height:1.6;}
+  .options{display:flex;flex-direction:column;gap:10px;}
+  .opt{
+    display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+    background:#fff;border:1.5px solid var(--line);border-radius:14px;
+    padding:13px 16px;font-family:inherit;font-size:15px;color:var(--ink);
+    cursor:pointer;transition:all .16s ease;
+  }
+  .opt:hover{border-color:var(--accent);background:var(--accent-soft);}
+  .opt .dot{width:16px;height:16px;border-radius:50%;border:1.5px solid #D8D0C4;flex:none;transition:all .16s ease;}
+  .opt.on{border-color:var(--accent);background:var(--accent-soft);}
+  .opt.on .dot{background:var(--accent);border-color:var(--accent);box-shadow:inset 0 0 0 3px #fff;}
+  .opt .score{margin-left:auto;font-size:12px;color:var(--muted);flex:none;}
+  .q-hint{text-align:center;font-size:12.5px;color:var(--muted);margin-top:14px;}
+  .nav{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:18px;}
+  .fade{animation:fadeIn .32s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+  /* ---------- 结果 ---------- */
+  .result-hero{text-align:center;padding:4px 0 6px;}
+  .result-icon{font-size:34px;}
+  .result-summary{font-size:15px;color:var(--ink-soft);margin-top:6px;}
+  .section{margin-top:26px;}
+  .section-title{
+    font-size:15px;font-weight:600;color:var(--ink);
+    display:flex;align-items:center;gap:8px;margin-bottom:12px;
+  }
+  .section-title::before{content:"";width:4px;height:15px;border-radius:3px;background:var(--accent);}
+  .radar-box{display:flex;flex-direction:column;align-items:center;}
+  #radar{max-width:100%;height:auto;}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:6px;font-size:12.5px;color:var(--ink-soft);}
+  .legend span{display:flex;align-items:center;gap:6px;}
+  .legend i{width:10px;height:10px;border-radius:50%;display:inline-block;}
+
+  .layer-card{border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:14px;background:#fff;}
+  .layer-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:10px;}
+  .layer-name{font-size:16px;font-weight:600;}
+  .layer-score{font-size:20px;font-weight:700;color:var(--accent-deep);}
+  .layer-score small{font-size:12px;font-weight:500;color:var(--muted);margin-left:2px;}
+  .dim-row{display:flex;align-items:center;gap:10px;margin:7px 0;font-size:13.5px;}
+  .dim-row .nm{width:9.5em;flex:none;color:var(--ink-soft);}
+  .dim-row .bar{flex:1;height:7px;border-radius:6px;background:#F2EDE4;overflow:hidden;}
+  .dim-row .bar > i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--accent),var(--sage));}
+  .dim-row .vl{width:2.6em;text-align:right;flex:none;font-variant-numeric:tabular-nums;color:var(--ink);}
+  .dim-row.weak .bar > i{background:linear-gradient(90deg,var(--blue),#A9C3CB);}
+  .dim-row.weak .vl{color:var(--blue);}
+  .dim-row.strong .bar > i{background:linear-gradient(90deg,#B98C49,var(--accent));}
+  .interpret{
+    margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);
+    font-size:14px;color:var(--ink-soft);line-height:1.75;
+  }
+  .interpret b{color:var(--ink);}
+
+  .tag-list{display:flex;flex-direction:column;gap:10px;}
+  .tag-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;font-size:14.5px;}
+  .tag-item .rk{width:22px;height:22px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:12px;color:#fff;}
+  .tag-item .nm{flex:1;}
+  .tag-item .sc{font-weight:700;font-variant-numeric:tabular-nums;}
+  .tag-item.s{background:var(--accent-soft);}
+  .tag-item.s .rk{background:var(--accent-deep);}
+  .tag-item.s .sc{color:var(--accent-deep);}
+  .tag-item.g{background:var(--blue-soft);}
+  .tag-item.g .rk{background:var(--blue);}
+  .tag-item.g .sc{color:var(--blue);}
+
+  .summary-text{
+    background:var(--sage-soft);border-radius:16px;padding:16px 18px;
+    font-size:14.5px;color:var(--ink);line-height:1.85;
+  }
+  .note-box{
+    background:var(--accent-soft);border-radius:16px;padding:16px 18px;
+    font-size:14px;color:var(--ink-soft);line-height:1.8;
+  }
+  .entry-sel{margin-top:12px;width:100%;font-family:inherit;font-size:14px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--ink);}
+  .entry-rel{margin-top:12px;font-size:14px;color:var(--ink-soft);line-height:1.8;}
+  .entry-rel .next{margin-top:10px;padding:12px 14px;background:#fff;border:1px dashed var(--accent);border-radius:12px;color:var(--ink);}
+  .entry-rel b{color:var(--ink);}
+  .nav.center{justify-content:center;}
+  .footer-note{text-align:center;font-size:12px;color:var(--muted);margin-top:28px;line-height:1.8;}
+
+  @media (max-width:420px){
+    .hero h1{font-size:22px;}
+    .q-title{font-size:17px;}
+    .dim-row .nm{width:7.5em;}
+  }
+
+  /* ---------- 保存长图（与入口测评同套样式） ---------- */
+  .btn-save{background:var(--sage);color:#fff;font-weight:600;border:none;border-radius:14px;padding:13px 22px;font-size:15px;cursor:pointer;font-family:inherit;transition:all .18s ease;}
+  .btn-save:hover{background:#7A9477;}
+  .btn-save:disabled{opacity:.55;cursor:not-allowed;}
+  .save-section{text-align:center;margin-top:18px;}
+  .save-section-top{text-align:center;margin:18px 0 22px;}
+  .save-hint{font-size:12.5px;color:var(--muted);margin:9px 4px 0;line-height:1.7;}
+
+  /* ---------- 联系助教 ---------- */
+  .contact-section{margin-top:20px;text-align:center;background:#FCFAF7;border:1px dashed var(--line);border-radius:16px;padding:22px 18px;}
+  .contact-section h3{font-size:16px;font-weight:600;margin:0 0 12px;color:var(--ink);display:flex;justify-content:center;align-items:center;gap:8px;}
+  .contact-section h3::before{content:"";width:4px;height:15px;border-radius:3px;background:var(--accent);}
+  .contact-text{font-size:14.5px;color:var(--ink-soft);line-height:1.75;margin:0 0 16px;}
+  .qr-placeholder{width:168px;height:168px;margin:0 auto 12px;border-radius:12px;background:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;overflow:hidden;padding:8px;box-sizing:border-box;cursor:pointer;transition:box-shadow .2s;}
+  .qr-placeholder:hover{box-shadow:0 4px 14px rgba(140,109,63,.16);}
+  .qr-placeholder img, .qr-placeholder svg{width:100%;height:100%;object-fit:contain;display:block;}
+  .contact-caption{font-size:13px;color:var(--accent-deep);font-weight:600;letter-spacing:.5px;margin-top:6px;}
+  .qr-tip{font-size:12px;color:var(--muted);text-align:center;margin:6px 0 0;line-height:1.6;}
+
+  /* ---------- 模态框 ---------- */
+  .img-modal{position:fixed;inset:0;background:rgba(40,30,20,.62);z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px;}
+  .img-modal-box{max-width:440px;width:100%;max-height:74vh;overflow:auto;background:#fff;border-radius:14px;padding:10px;box-shadow:0 10px 40px rgba(0,0,0,.25);}
+  .img-modal-box img{width:100%;display:block;border-radius:8px;}
+  .img-modal-bar{margin-top:14px;display:flex;gap:12px;}
+  .img-modal-tip{color:#fff;font-size:13px;margin-top:10px;text-align:center;line-height:1.5;}
+  .qr-modal-box{background:#fff;border-radius:16px;padding:20px;box-shadow:0 12px 48px rgba(0,0,0,.28);display:flex;flex-direction:column;align-items:center;gap:14px;}
+  .qr-modal-box img, .qr-modal-box svg{width:min(68vw,280px);height:min(68vw,280px);object-fit:contain;display:block;border-radius:8px;}
+  .qr-modal-close{background:var(--accent);color:#fff;border:none;border-radius:12px;padding:10px 36px;font-size:15px;cursor:pointer;font-family:inherit;font-weight:600;transition:all .18s;}
+  .qr-modal-close:hover{background:var(--accent-deep);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ 须知页 ============ -->
+  <div id="introScreen">
+    <div class="hero">
+      <span class="badge">心 理 工 具 箱</span>
+      <h1>心理工具箱 · 能力画像</h1>
+      <p>看看你在五大能力层级上的分布，找到优势与成长空间</p>
+    </div>
+
+    <div class="card">
+      <h2 class="intro-title">填写须知</h2>
+      <p class="intro-lead">在开始之前，想先和你说几句话。</p>
+      <div class="intro-body">
+        <p>这份测评不是考试，也没有标准答案。它只是为了帮助你更清楚地了解自己目前在各项能力上的表现。</p>
+        <p>请根据你<strong>最近三个月左右</strong>的实际表现和真实感受，选择最符合自己的选项。不需要过度思考，也不需要考虑“我应该是什么样”，选择那个<strong>最像你</strong>的答案即可。</p>
+        <p>所有题目均为选择题，选项从“完全不符合”到“完全符合”，请根据你的真实情况作答。</p>
+      </div>
+      <div class="scale-preview">
+        <b>共 70 题 · 五个层级</b><br/>
+        根基能力 → 内在能力 → 关系能力 → 做事能力 → 意义能力<br/>
+        答题采用 5 点量表：完全不符合 / 比较不符合 / 一般 / 比较符合 / 完全符合<br/>
+        大约需要 <b>8–12 分钟</b>，可以随时返回上一题修改。
+      </div>
+      <div class="scale-preview" style="background:var(--accent-soft);color:var(--accent-deep);">
+        <b>一个小提醒</b><br/>
+        题目里有的是“我能做到”，有的是“我常常做不到”——两种说法会交替出现。
+        这是刻意设计的，用来避免惯性作答。请<b>只看每一句话本身的意思</b>独立判断，
+        不用去想它和上一题是不是一回事。
+      </div>
+      <div class="intro-actions">
+        <button class="btn btn-primary" id="startBtn">开始测评 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 答题页 ============ -->
+  <div id="quizScreen" style="display:none;">
+    <div class="progress"><i id="progBar"></i></div>
+    <div class="meta">
+      <span>第 <b id="qIndex">1</b> / 70 题</span>
+      <span id="qPercent">已完成 0%</span>
+    </div>
+    <div class="card" id="qCard">
+      <div class="q-part" id="qPart"></div>
+      <h3 class="q-title" id="qTitle"></h3>
+      <div class="options" id="qOptions"></div>
+      <div class="q-hint" id="qHint"></div>
+    </div>
+    <div class="nav">
+      <button class="btn btn-ghost" id="prevBtn" style="display:none;">← 上一题</button>
+      <button class="btn btn-primary" id="nextBtn" style="display:none;">查看结果</button>
+    </div>
+  </div>
+
+  <!-- ============ 结果页 ============ -->
+  <div id="resultScreen" style="display:none;">
+    <div class="card">
+      <div class="result-hero">
+        <div class="result-icon">🌿</div>
+        <h2 style="margin:6px 0 2px;font-size:20px;">你的能力画像</h2>
+        <div class="result-summary" id="resSummary"></div>
+      </div>
+    </div>
+
+    <!-- 顶部：保存长图按钮 -->
+    <div class="save-section-top">
+      <button class="btn btn-save btn-export">📸 保存我的测评结果（长图）</button>
+      <p class="save-hint">退出后无法再次查看结果，请及时导出并保存</p>
+    </div>
+
+    <!-- A. 蛛网图 -->
+    <div class="card section radar-card">
+      <div class="section-title">五层能力分布</div>
+      <div class="radar-box">
+        <canvas id="radar" width="724" height="780"></canvas>
+        <div class="legend">
+          <span><i style="background:#B98C49"></i>优势区域（≥4.0）</span>
+          <span><i style="background:#7B9AA6"></i>成长区域（≤2.5）</span>
+          <span><i style="background:#C9A36A"></i>稳定区域</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- B. 各层得分与解读 -->
+    <div class="card section">
+      <div class="section-title">各层得分与解读</div>
+      <div id="layerList"></div>
+    </div>
+
+    <!-- C. 优势与成长空间 -->
+    <div class="card section">
+      <div class="section-title">优势与成长空间</div>
+      <div style="margin-bottom:16px;">
+        <div style="font-size:13.5px;color:var(--accent-deep);font-weight:600;margin-bottom:8px;">✦ 你的优势项（得分最高的 3 项）</div>
+        <div class="tag-list" id="strengthList"></div>
+      </div>
+      <div>
+        <div style="font-size:13.5px;color:var(--blue);font-weight:600;margin-bottom:8px;">✧ 成长空间（得分最低的 3 项）</div>
+        <div class="tag-list" id="growthList"></div>
+      </div>
+      <div class="summary-text" id="adviceText" style="margin-top:18px;"></div>
+    </div>
+
+    <!-- D. 与心理工具箱·定位测评的关联 -->
+    <div class="card section">
+      <div class="section-title">心理工具箱·定位测评</div>
+      <div class="note-box" id="entryBox"></div>
+    </div>
+
+    <!-- 中部：保存长图按钮 -->
+    <div class="save-section">
+      <button class="btn btn-save btn-export">📸 保存我的测评结果（长图）</button>
+      <p class="save-hint">退出后无法再次查看结果，请及时导出并保存</p>
+    </div>
+
+    <!-- 联系助教 -->
+    <div class="contact-section">
+      <h3>联系助教</h3>
+      <p class="contact-text">如果你还是不太确定接下来该做什么，可以添加助教，并把这张测评结果图发给他，我们一起帮你看看哟～</p>
+      <div class="qr-placeholder" id="qrBox" title="点击放大">
+        <img src="qrcode.jpg" alt="扫码添加助教 Layla" id="qrImg">
+      </div>
+      <div class="contact-caption">扫码添加助教，把结果图发给他</div>
+      <p class="qr-tip">轻触二维码可放大，放大后长按即可识别添加</p>
+    </div>
+
+    <!-- 重新测评 -->
+    <div class="nav center restart-nav" style="margin-top:14px;">
+      <button class="btn btn-primary" id="restartBtn">重新测评</button>
+    </div>
+
+    <p class="footer-note">本测评仅用于自我探索与成长参考，不构成任何诊断或评价。<br/>能力是可以被练习的，画像只是此刻的快照，不是终点。</p>
+  </div>
+
+  <!-- ============ 长图预览模态框 ============ -->
+  <div id="imgModal" class="img-modal" style="display:none;">
+    <div class="img-modal-box">
+      <img id="imgPreview" alt="测评结果长图"/>
+    </div>
+    <div class="img-modal-bar">
+      <button class="btn btn-primary" id="imgCloseBtn">关闭</button>
+    </div>
+    <p class="img-modal-tip">手机用户可长按上方图片保存到相册，再发给助教</p>
+  </div>
+
+  <!-- ============ 二维码放大模态框 ============ -->
+  <div id="qrModal" class="img-modal" style="display:none;">
+    <div class="qr-modal-box">
+      <div id="qrPreview" style="width:min(68vw,280px);height:min(68vw,280px);"></div>
+      <p class="img-modal-tip" style="margin:0;color:var(--ink-soft);font-size:13px;">长按二维码即可识别，添加助教</p>
+      <button class="qr-modal-close" id="qrCloseBtn">关闭</button>
+    </div>
+  </div>
+
+</div>
+
+<script src="html2canvas.min.js"></script>
+<script>
+/* =========================================================
+   一、题库（70 题 · 5 层 · 17 个能力项）
+   ========================================================= */
+const LAYERS = [
+  { key:'root', name:'根基能力', sub:'第一层',
+    dims:[
+      { key:'attention', name:'注意力', qs:[
+        { t:'我能在一件事情上持续专注较长时间，不容易走神。' },
+        { t:'我很容易被周围的环境或消息打扰，很难保持专注。', r:true },
+        { t:'我能根据任务的重要性，有意识地把注意力分配到合适的地方。' },
+        { t:'当我走神之后，我能较快地把注意力拉回到正在做的事情上。' }
+      ]},
+      { key:'resilience', name:'心力', qs:[
+        { t:'遇到挫折后，我能够较快地调整状态，继续往前走。' },
+        { t:'在压力大的情况下，我容易变得慌乱或不知所措。', r:true },
+        { t:'即使短期内看不到回报，我也能坚持做我认为重要的事。' },
+        { t:'即使没有人督促我，我也能主动去做该做的事。' }
+      ]},
+      { key:'body', name:'体力', qs:[
+        { t:'我的睡眠质量整体较好，精力恢复得比较充分。' },
+        { t:'我经常感到疲惫，即使休息后也不太能恢复。', r:true },
+        { t:'我能察觉到身体疲劳或紧张的信号，并及时调整。' },
+        { t:'高强度工作后，我不知道该如何让自己恢复精力。', r:true }
+      ]},
+      { key:'mind', name:'脑力', qs:[
+        { t:'面对复杂问题时，我能快速理清思路，找到头绪。' },
+        { t:'学习新知识时，我常常抓不住核心要点。', r:true },
+        { t:'在同时处理多项信息时，我能保持思维清晰，不容易混乱。' },
+        { t:'在信息杂乱的情况下，我很容易陷入思维混乱。', r:true }
+      ]}
+    ]},
+
+  { key:'inner', name:'内在能力', sub:'第二层',
+    dims:[
+      { key:'awareness', name:'自我觉察', qs:[
+        { t:'我通常能清楚地说出自己正在经历什么情绪。' },
+        { t:'我常常不知道自己为什么会做出某些反应。', r:true },
+        { t:'我能理解自己行为背后的真实需求。' },
+        { t:'我很难感觉到身体状态和心理状态之间有什么关联。', r:true }
+      ]},
+      { key:'emotion', name:'情绪调节', qs:[
+        { t:'当负面情绪出现时，我能允许它存在，不急着赶走它。' },
+        { t:'我经常因为情绪失控而后悔自己的言行。', r:true },
+        { t:'即使在情绪强烈时，我依然能做出相对理性的选择。' },
+        { t:'情绪低落时，我不知道如何让自己走出来。', r:true }
+      ]},
+      { key:'drive', name:'自我驱动', qs:[
+        { t:'即使没有外部奖励或认可，我也愿意主动做事。' },
+        { t:'我常常不知道自己为什么要做某件事，缺乏目标感。', r:true },
+        { t:'在没有外部监督的情况下，我依然能保持行动的节奏。' },
+        { t:'我经常需要别人催促才能行动起来。', r:true }
+      ]},
+      { key:'care', name:'自我关怀', qs:[
+        { t:'当我犯错时，我倾向于严厉批评自己。', r:true },
+        { t:'我能接纳自己“不够完美”的部分，不因此否定全部。' },
+        { t:'我对自己说话的方式，更像是责备而不是鼓励。', r:true },
+        { t:'我能在需要的时候对自己说“够了”，并停下来。' }
+      ]}
+    ]},
+
+  { key:'relation', name:'关系能力', sub:'第三层',
+    dims:[
+      { key:'empathy', name:'理解与共情他人', qs:[
+        { t:'我能感受到周围人的情绪状态，即使他们没有直接说出来。' },
+        { t:'当别人遇到困难时，我很难真正站在他的角度去感受他的处境。', r:true },
+        { t:'我能接受别人和我有不同的观点，不因此感到不安。' },
+        { t:'我不太善于通过表情或语气去理解对方的真实想法。', r:true }
+      ]},
+      { key:'communication', name:'沟通表达', qs:[
+        { t:'我能清晰准确地表达自己的想法和需求，不容易被误解。' },
+        { t:'别人说话时，我经常急着回应或打断，没有真正听进去。', r:true },
+        { t:'无论是给出建议还是接收建议，我都能保持开放的心态。' },
+        { t:'在敏感或复杂的对话中，我常常把握不住重点，把话题聊偏。', r:true }
+      ]},
+      { key:'boundary', name:'边界与建设性冲突', qs:[
+        { t:'我清楚自己的边界在哪里，知道什么是我能接受的、什么是不能接受的。' },
+        { t:'需要拒绝别人时，我常常感到过度内疚，很难说出口。', r:true },
+        { t:'在发生分歧时，我依然能保持关系的稳定，不至于把关系搞僵。' },
+        { t:'冲突发生后，我不知道该如何修复关系。', r:true }
+      ]}
+    ]},
+
+  { key:'action', name:'做事能力', sub:'第四层',
+    dims:[
+      { key:'problem', name:'解决问题', qs:[
+        { t:'面对问题时，我经常被表面现象迷惑，看不清核心是什么。', r:true },
+        { t:'我能把复杂问题拆解成几个相对简单的部分来处理。' },
+        { t:'遇到难题时，我通常只能想到一种解决方案，很难有其他思路。', r:true },
+        { t:'有了方案之后，我能把它落地执行，并观察实际效果。' }
+      ]},
+      { key:'learning', name:'学习能力', qs:[
+        { t:'我擅长快速找到高质量的信息来源。' },
+        { t:'学到一个新知识后，我能用自己的话把它重新讲清楚。' },
+        { t:'我很少把学到的知识真正用到实际生活中去。', r:true },
+        { t:'我很难保持持续学习的节奏，容易半途而废。', r:true }
+      ]},
+      { key:'planning', name:'规划与执行', qs:[
+        { t:'我能为自己设定清晰、具体的目标。' },
+        { t:'我能把一个看似很大的目标拆解成一系列可操作的小步骤。' },
+        { t:'我能合理安排时间，把重要的事放在优先位置。' },
+        { t:'我经常因为拖延而耽误重要的事情。', r:true },
+        { t:'在执行过程中，我能根据实际情况及时调整计划。' },
+        { t:'一旦开始做一件事，我通常能推动它直到完成。' }
+      ]},
+      { key:'review', name:'复盘与迭代', qs:[
+        { t:'做完一件事后，我习惯回顾过程，梳理得失。' },
+        { t:'我常常不清楚一件事为什么会做成功或为什么会失败。', r:true },
+        { t:'我善于从过去的经历中发现可以优化的行为模式。' },
+        { t:'复盘之后，我会主动调整自己的做法，避免重复错误。' }
+      ]}
+    ]},
+
+  { key:'meaning', name:'意义能力', sub:'第五层',
+    dims:[
+      { key:'direction', name:'方向感', qs:[
+        { t:'我很清楚哪些事对我真正重要，哪些事其实没那么重要。' },
+        { t:'我经常在短期诱惑面前放弃长期目标。', r:true },
+        { t:'我清楚地知道自己想要往哪个方向走。' },
+        { t:'当外部环境发生变化时，我容易迷失方向，不知道该怎么调整。', r:true }
+      ]},
+      { key:'meaning', name:'意义感', qs:[
+        { t:'我能为自己的经历和行动找到意义或价值。' },
+        { t:'我常常觉得自己只是在机械地完成任务，感受不到更深层的价值。', r:true },
+        { t:'我能感受到自己与更大的事物（如家庭、社会、某种价值观）之间的连接。' },
+        { t:'当意义感缺失时，我不知道该如何重新找到方向。', r:true }
+      ]}
+    ]}
+];
+
+/* 扁平化为题目列表；rev = 该题为反向计分题（分数 = 6 - 原始分） */
+const QUESTIONS = [];
+LAYERS.forEach(L => {
+  L.dims.forEach(D => {
+    D.qs.forEach(q => {
+      QUESTIONS.push({ text:q.t, rev:!!q.r, layer:L, dim:D });
+    });
+  });
+});
+const TOTAL = QUESTIONS.length; // 70
+
+
+/* 选项 */
+const OPTIONS = [
+  { label:'完全不符合', value:1 },
+  { label:'比较不符合', value:2 },
+  { label:'一般',       value:3 },
+  { label:'比较符合',   value:4 },
+  { label:'完全符合',   value:5 }
+];
+
+/* =========================================================
+   二、状态
+   ========================================================= */
+let answers = new Array(TOTAL).fill(null);
+let current = 0;
+let lastResult = null;
+
+const $ = id => document.getElementById(id);
+const fmt = n => (Math.round(n * 10) / 10).toFixed(1);
+const mean = arr => arr.reduce((a,b) => a + b, 0) / arr.length;
+
+/* =========================================================
+   三、答题流程
+   ========================================================= */
+function renderQuestion(){
+  const q = QUESTIONS[current];
+  const card = $('qCard');
+  card.classList.remove('fade'); void card.offsetWidth; card.classList.add('fade');
+
+  $('qIndex').textContent = current + 1;
+  const done = answers.filter(a => a !== null).length;
+  $('progBar').style.width = (done / TOTAL * 100) + '%';
+  $('qPercent').textContent = '已完成 ' + Math.round(done / TOTAL * 100) + '%';
+
+  $('qPart').innerHTML =
+    '<span class="chip">' + q.layer.sub + ' · ' + q.layer.name + '</span>' +
+    '<span class="chip2">' + q.dim.name + '</span>';
+
+  $('qTitle').textContent = q.text;
+
+  const box = $('qOptions');
+  box.innerHTML = '';
+  OPTIONS.forEach(o => {
+    const b = document.createElement('button');
+    b.className = 'opt' + (answers[current] === o.value ? ' on' : '');
+    b.innerHTML = '<span class="dot"></span><span>' + o.label + '</span>';
+    b.onclick = () => select(o.value);
+    box.appendChild(b);
+  });
+
+  $('qHint').textContent = '按你最近三个月的真实情况选择，不需要多想。';
+
+  $('prevBtn').style.display = current > 0 ? 'block' : 'none';
+
+  const isLast = current === TOTAL - 1;
+  const allDone = answers.every(a => a !== null);
+  $('nextBtn').style.display = (isLast && allDone) ? 'block' : 'none';
+}
+
+function select(v){
+  answers[current] = v;
+  Array.from($('qOptions').children).forEach((el, i) => {
+    el.classList.toggle('on', OPTIONS[i].value === v);
+  });
+  const done = answers.filter(a => a !== null).length;
+  $('progBar').style.width = (done / TOTAL * 100) + '%';
+  $('qPercent').textContent = '已完成 ' + Math.round(done / TOTAL * 100) + '%';
+
+  if (current === TOTAL - 1){
+    const allDone = answers.every(a => a !== null);
+    $('nextBtn').style.display = allDone ? 'block' : 'none';
+    if (!allDone){
+      // 跳到第一个未答题目
+      const idx = answers.findIndex(a => a === null);
+      if (idx > -1){ setTimeout(() => { current = idx; renderQuestion(); }, 260); }
+    }
+    return;
+  }
+  setTimeout(() => { current++; renderQuestion(); }, 260);
+}
+
+$('prevBtn').onclick = () => { if (current > 0){ current--; renderQuestion(); } };
+$('nextBtn').onclick = () => { if (answers.every(a => a !== null)) showResult(); };
+
+/* 键盘 1-5 快捷作答 */
+document.addEventListener('keydown', e => {
+  if ($('quizScreen').style.display === 'none') return;
+  const n = parseInt(e.key, 10);
+  if (n >= 1 && n <= 5) select(n);
+  if (e.key === 'ArrowLeft' && current > 0){ current--; renderQuestion(); }
+});
+
+$('startBtn').onclick = () => {
+  $('introScreen').style.display = 'none';
+  $('quizScreen').style.display = 'block';
+  renderQuestion();
+  window.scrollTo({ top:0, behavior:'smooth' });
+};
+
+/* =========================================================
+   四、计分
+   ========================================================= */
+function score(){
+  const dimScores = {};   // dimKey -> score
+  const dimMeta = {};     // dimKey -> {name, layer}
+  let qi = 0;
+  LAYERS.forEach(L => {
+    L.dims.forEach(D => {
+      const vals = [];
+      for (let i = 0; i < D.qs.length; i++){
+        const raw = answers[qi++];
+        vals.push(D.qs[i].r ? (6 - raw) : raw);   // 反向题：6 - 原始分
+      }
+      dimScores[D.key] = mean(vals);
+      dimMeta[D.key] = { name:D.name, layer:L.name, layerKey:L.key };
+    });
+  });
+
+  const layerResults = LAYERS.map(L => {
+    const dims = L.dims.map(D => ({
+      key:D.key,
+      name:D.name,
+      score:dimScores[D.key]
+    }));
+    return {
+      key:L.key,
+      name:L.name,
+      sub:L.sub,
+      score:mean(dims.map(d => d.score)),
+      dims:dims
+    };
+  });
+
+  return { dimScores, dimMeta, layerResults };
+}
+
+/* =========================================================
+   五、解读文案
+   ========================================================= */
+function interpret(layerKey, s, sortedAsc){
+  const weak = sortedAsc[0];
+  const w = '「' + weak.name + '」';
+  const ws = fmt(weak.score);
+  const strong = sortedAsc[sortedAsc.length - 1];
+
+  const T = {
+    root: [
+      [4.2, '你的底层状态相当扎实，注意力、心力、体力和脑力之间形成了比较良性的循环。当下你的“燃料”是足够的，可以支撑你去做更高层次的探索与改变——包括那些需要长期投入的事。'],
+      [3.4, '整体底盘是稳的，但并非处处均衡。其中' + w + '相对偏弱（' + ws + ' 分），它往往是最先拖住其他部分的那一环。先把这一环补上，整体状态会跟着一起松动。'],
+      [2.6, '你的根基处在“够用但偏紧”的状态。平时能撑住，可一旦任务叠加或压力上升，就容易表现为注意力涣散、情绪起伏或持续疲惫。现阶段与其追求效率，不如先把睡眠、节奏和恢复补回来——' + w + '最值得优先照顾。'],
+      [0,   '目前你的底层能量明显偏低。很多“做不动”并不是态度或能力问题，而是身心已经透支。此刻最值得做的不是逼自己更努力，而是减少消耗、恢复睡眠与体力，让系统先回血。先照顾好' + w + '，其他层级的提升才有落脚点。']
+    ],
+    inner: [
+      [4.2, '你和自己的关系相处得不错：能看见自己的情绪与模式，也懂得在低谷时把自己接住。这种内在的稳定，是你应对外部变化时最可靠的缓冲垫。'],
+      [3.4, '你对自己有一定的觉察和照顾能力，只是还不够稳定。相对而言，' + w + '是你容易卡住的地方——状态好的时候它不明显，一旦压力大就会先失守。把它练成习惯，比临时救火有用得多。'],
+      [2.6, '你内在的自我支持系统还比较薄弱：容易在情绪上用力过猛，或者受挫后对自己过于严厉。尤其在' + w + '上，你可能比多数人更需要外部支撑。可以从很小的自我照顾动作开始，而不是要求自己一下子变强大。'],
+      [0,   '你目前内在消耗比较大，可能常常感到内耗、自我否定，或在情绪来临时缺少抓手。这不是你的问题，而是一项可以被练习的能力。建议先不追求“自我提升”，从记录情绪、允许自己休息这类最低门槛的动作开始。']
+    ],
+    relation: [
+      [4.2, '你在关系里既能靠近，也能保持自己：能听懂别人没说出口的部分，也能在分歧中守住边界。这是非常稀缺的组合——既不委屈自己，也不把对方推远。'],
+      [3.4, '你在关系中的基本盘是好的，能维持大多数互动。不过' + w + '还有提升空间，它往往决定了关系能不能走得更深、更久，而不只是“不出问题”。'],
+      [2.6, '你在关系里可能有些吃力：要么不太好意思表达真实想法，要么在冲突中容易退让、或突然爆发。' + w + '是你最值得练习的一环，它直接决定了你在关系里累不累。'],
+      [0,   '关系目前对你来说消耗大于滋养。你可能经常在“忍着”和“爆发”之间摇摆，或者不太确定自己的边界在哪里。先不必追求处理复杂冲突，从识别一个小小的“我不太舒服”开始，就已经是进步。']
+    ],
+    action: [
+      [4.2, '你把“想清楚”和“做到”连成了一条完整的链路：能拆解问题、推进执行，也能在事后复盘迭代。这意味着你的成长是可以累积的，不容易重复踩同一个坑。'],
+      [3.4, '你的执行力整体在线，能完成大多数事情。相对薄弱的是' + w + '——它往往决定了你是“把事做完”，还是“把事越做越好”。'],
+      [2.6, '你做事时可能常有“知道该怎么做，但就是推不动”的感觉。真正的卡点通常在' + w + '上。与其靠意志力硬撑，不如把目标切得更小、把启动成本降得更低。'],
+      [0,   '你在推进事情上感到比较吃力，容易被拖延、混乱或反复中断困住。这不是懒，很可能是系统还没建起来。建议先只做一件事：把本周最重要的三件事写下来，做完一件划掉一件——先找回“我能完成”的感觉。']
+    ],
+    meaning: [
+      [4.2, '你清楚什么对自己重要，也能把日常行动和更大的价值连在一起。这让你可以忍受过程中的枯燥与缓慢，因为你并不是在完成某个任务，而是在走一条自己认的路。'],
+      [3.4, '你大体知道自己要去哪，只是偶尔会在忙碌中失去连接感。当' + w + '偏低时，容易陷入“做了很多，却不知道为了什么”的空转。定期停下来问问自己“这还是我想要的吗”，会很有帮助。'],
+      [2.6, '你目前的方向感有些模糊，容易在短期诱惑和长期利益之间摇摆，或在忙碌中感到空虚。意义感不足时，行动力往往也会跟着下滑——所以这不是“想太多”，而是确实需要被回应。'],
+      [0,   '你可能正处在比较明显的迷茫或虚无感中，做事情提不起劲，也不太确定这一切是为了什么。这种状态很常见，也并非失败。先把标准降到最低：找到一件“做的时候不那么难受”的小事，让它成为你重新连接的起点。']
+    ]
+  };
+
+  const bands = T[layerKey];
+  for (let i = 0; i < bands.length; i++){
+    if (s >= bands[i][0]) return bands[i][1];
+  }
+  return bands[bands.length - 1][1];
+}
+
+/* =========================================================
+   六、入口测评关联（D 部分）
+   ========================================================= */
+const ENTRY_ISSUES = [
+  { label:'情绪困扰', dims:['emotion','resilience','awareness'],
+    next:'从“情绪命名”开始：每天睡前用一句话写下今天最强烈的一种情绪，不评判、不急着解决，先练“看见”。' },
+  { label:'亲密关系', dims:['communication','boundary','empathy'],
+    next:'挑一次低冲突的对话，练习用“我感受到……”开头表达自己的需要，而不是评价对方做得对不对。' },
+  { label:'家庭关系', dims:['boundary','communication','care'],
+    next:'先明确一条你希望守住的小边界，用温和但清楚的方式说出来。边界不需要一次到位，说出口本身就是进展。' },
+  { label:'职场关系', dims:['communication','boundary','empathy'],
+    next:'选一件你一直回避沟通的事，用“事实 + 感受 + 请求”三步法准备一段话，再找合适的时机说出来。' },
+  { label:'工作学业压力', dims:['resilience','body','planning'],
+    next:'把注意力从“我要做完所有事”转到“今天只做三件”。压力常常来自失控感，缩小掌控单位是最直接的解药。' },
+  { label:'职业发展与规划', dims:['direction','planning','awareness'],
+    next:'花一周时间写下三个问题的答案：我擅长什么、我在意什么、我愿意为此放弃什么。答案不必完美，先有初稿。' },
+  { label:'自我认知与价值感', dims:['care','awareness','meaning'],
+    next:'每天记一件“我今天做得还不错的小事”。价值感不是被证明出来的，而是一次次被自己看见累积起来的。' },
+  { label:'人生方向与意义感', dims:['direction','meaning','awareness'],
+    next:'找一件“不那么功利、但你愿意投入”的事，每周给它固定两小时。意义常常是在行动中长出来的，不是想出来的。' },
+  { label:'身体与饮食', dims:['body','care','resilience'],
+    next:'从最不费力的一项开始：固定起床时间、每天多走 2000 步，或把一顿饭吃慢一点。身体先稳，情绪才稳。' },
+  { label:'睡眠与精力', dims:['body','resilience','emotion'],
+    next:'先只改一件事：固定起床时间（哪怕前一晚睡得晚）。这是重建睡眠节律最有效、也最容易被忽略的一步。' },
+  { label:'习惯与行动力', dims:['planning','drive','review'],
+    next:'把目标缩小到你“不可能失败”的程度，比如每天 5 分钟。先建立“我做到了”的连续记录，再谈加量。' },
+  { label:'社交与人际', dims:['communication','empathy','boundary'],
+    next:'这周主动发起一次低成本的连接——给一个人发一条真诚的消息，不需要长篇大论。' },
+  { label:'创伤与过往经历', dims:['care','emotion','awareness'],
+    next:'这件事适合被温柔对待，而不是被独自消化。建议寻找一位你信任的人或专业支持者，先说出来，再慢慢处理。' }
+];
+
+const ENTRY_KEYS = ['psytoolbox.entry.result','psytoolbox_entry','psytoolbox.entry','心理工具箱.入口测评','mentalToolbox.entry'];
+
+function readEntryIssue(){
+  for (const k of ENTRY_KEYS){
+    let raw = null;
+    try { raw = localStorage.getItem(k); } catch(e){ continue; }
+    if (!raw) continue;
+    let val = raw;
+    try { val = JSON.parse(raw); } catch(e){ /* 纯字符串 */ }
+    let issue = null;
+    if (typeof val === 'string') issue = val;
+    else if (val && typeof val === 'object'){
+      issue = val.focus || val.q2 || val.issue || val.mainIssue || val.mostIssue ||
+              val['最困扰的问题'] || val.problem || null;
+      if (Array.isArray(issue)) issue = issue[0];
+      if (issue && typeof issue === 'object') issue = issue.label || issue.value || issue.name || null;
+    }
+    if (issue){
+      const hit = ENTRY_ISSUES.find(i => i.label === issue) ||
+                  ENTRY_ISSUES.find(i => issue.indexOf(i.label) > -1 || i.label.indexOf(issue) > -1);
+      if (hit) return hit;
+    }
+  }
+  return null;
+}
+
+function renderEntryBox(dimScores){
+  const box = $('entryBox');
+  const preset = readEntryIssue();
+
+  let html = '<div style="margin-bottom:12px;">在心理工具箱·定位测评中，最困扰你的一项是什么？选择后可获得更加完整的成长建议。</div>';
+  html += '<select class="entry-sel" id="entrySel">' +
+            '<option value="">' + (preset ? '重新选择其他问题…' : '请选择最困扰你的一项…') + '</option>' +
+            ENTRY_ISSUES.map(i => '<option value="' + i.label + '"' + (preset && preset.label === i.label ? ' selected' : '') + '>' + i.label + '</option>').join('') +
+          '</select>';
+  html += '<div class="entry-rel" id="entryRel"></div>';
+  box.innerHTML = html;
+
+  const sel = $('entrySel');
+  sel.onchange = () => updateEntryRel(sel.value, dimScores);
+  if (preset) updateEntryRel(preset.label, dimScores);
+}
+
+function updateEntryRel(label, dimScores){
+  const rel = $('entryRel');
+  if (!label){ rel.innerHTML = ''; return; }
+  const issue = ENTRY_ISSUES.find(i => i.label === label);
+  if (!issue){ rel.innerHTML = ''; return; }
+
+  const items = issue.dims.map(k => ({
+    name: DIM_NAME[k], score: dimScores[k]
+  })).sort((a,b) => a.score - b.score);
+
+  const low = items[0];
+  const list = items.map(i => '<b>' + i.name + '</b>（' + fmt(i.score) + ' 分）').join('、');
+
+  rel.innerHTML =
+    '你最困扰的是 <b>' + issue.label + '</b>。从能力画像看，与它关联最紧密的三项是：' + list + '。' +
+    '其中 <b>' + low.name + '</b> 得分最低（' + fmt(low.score) + ' 分），它很可能就是这个问题的真正卡点——' +
+    '其他两项更多是缓冲，而这一项决定了你会不会反复回到同一个困境里。' +
+    '<div class="next"><b>建议的下一步：</b>' + issue.next + '</div>';
+}
+
+const DIM_NAME = {};
+LAYERS.forEach(L => L.dims.forEach(D => { DIM_NAME[D.key] = D.name; }));
+
+/* =========================================================
+   七、蛛网图
+   ========================================================= */
+function drawRadar(layerResults){
+  const cv = $('radar');
+  const dpr = window.devicePixelRatio || 1;
+  const W = 724, H = 780;
+  cv.width = W * dpr; cv.height = H * dpr;
+  cv.style.width = '100%'; cv.style.maxWidth = W + 'px';
+  const ctx = cv.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, W, H);
+
+  const cx = W / 2, cy = H / 2 + 10, R = 275;
+  const N = layerResults.length;
+  const ang = i => (-Math.PI / 2) + i * 2 * Math.PI / N;
+  const pt = (i, r) => [cx + Math.cos(ang(i)) * r, cy + Math.sin(ang(i)) * r];
+
+  // 网格
+  for (let lv = 5; lv >= 1; lv--){
+    const r = R * lv / 5;
+    ctx.beginPath();
+    for (let i = 0; i < N; i++){
+      const [x, y] = pt(i, r);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.fillStyle = lv % 2 === 0 ? '#FBF7F0' : '#FFFFFF';
+    ctx.fill();
+    ctx.strokeStyle = '#EAE2D6';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+  // 刻度
+  ctx.fillStyle = '#BDB5A8';
+  ctx.font = '14px -apple-system,PingFang SC,sans-serif';
+  ctx.textAlign = 'left';
+  for (let lv = 1; lv <= 5; lv++) ctx.fillText(String(lv), cx + 5, cy - R * lv / 5 + 5);
+
+  // 轴线
+  ctx.strokeStyle = '#EAE2D6';
+  for (let i = 0; i < N; i++){
+    const [x, y] = pt(i, R);
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(x, y); ctx.stroke();
+  }
+
+  // 数据多边形
+  ctx.beginPath();
+  layerResults.forEach((L, i) => {
+    const [x, y] = pt(i, R * Math.max(L.score, 0.02) / 5);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.closePath();
+  const g = ctx.createRadialGradient(cx, cy, 10, cx, cy, R);
+  g.addColorStop(0, 'rgba(201,163,106,0.42)');
+  g.addColorStop(1, 'rgba(157,179,154,0.22)');
+  ctx.fillStyle = g; ctx.fill();
+  ctx.strokeStyle = '#C9A36A'; ctx.lineWidth = 2; ctx.stroke();
+
+  // 顶点 + 标签
+  layerResults.forEach((L, i) => {
+    const [x, y] = pt(i, R * Math.max(L.score, 0.02) / 5);
+    const strong = L.score >= 4, weak = L.score <= 2.5;
+    const color = strong ? '#B98C49' : (weak ? '#7B9AA6' : '#C9A36A');
+
+    ctx.beginPath();
+    ctx.arc(x, y, strong ? 8 : 7, 0, Math.PI * 2);
+    ctx.fillStyle = color; ctx.fill();
+    ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 2.5; ctx.stroke();
+
+    // 标签
+    const [lx, ly] = pt(i, R + 48);
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#3A3A38';
+    ctx.font = '600 19px -apple-system,PingFang SC,sans-serif';
+    ctx.fillText(L.name, lx, ly - 11);
+    ctx.fillStyle = color;
+    ctx.font = '700 18px -apple-system,PingFang SC,sans-serif';
+    ctx.fillText(fmt(L.score), lx, ly + 12);
+    if (strong || weak){
+      ctx.fillStyle = strong ? '#B98C49' : '#7B9AA6';
+      ctx.font = '14px -apple-system,PingFang SC,sans-serif';
+      ctx.fillText(strong ? '优势区域' : '成长区域', lx, ly + 33);
+    }
+  });
+}
+
+/* =========================================================
+   八、渲染结果
+   ========================================================= */
+function showResult(){
+  const { dimScores, dimMeta, layerResults } = score();
+  lastResult = { dimScores, layerResults };
+
+  try {
+    localStorage.setItem('psytoolbox.capability.result', JSON.stringify({
+      ts: Date.now(),
+      layers: layerResults.map(l => ({ name:l.name, score:Number(fmt(l.score)) })),
+      dims: Object.keys(dimScores).map(k => ({ key:k, name:dimMeta[k].name, score:Number(fmt(dimScores[k])) }))
+    }));
+  } catch(e){}
+
+  // 概览
+  const top = layerResults.slice().sort((a,b) => b.score - a.score)[0];
+  const lowL = layerResults.slice().sort((a,b) => a.score - b.score)[0];
+  $('resSummary').innerHTML =
+    '你最强的一层是 <b>' + top.name + '</b>（' + fmt(top.score) + ' 分），' +
+    '相对需要照顾的是 <b>' + lowL.name + '</b>（' + fmt(lowL.score) + ' 分）。' +
+    '下面是更细的能力分布。';
+
+  // 蛛网图
+  drawRadar(layerResults);
+
+  // 各层
+  const list = $('layerList');
+  list.innerHTML = '';
+  layerResults.forEach(L => {
+    const sorted = L.dims.slice().sort((a,b) => a.score - b.score);
+    const d = document.createElement('div');
+    d.className = 'layer-card';
+    let rows = sorted.slice().sort((a,b) => b.score - a.score).map(x => {
+      const cls = x.score >= 4 ? 'strong' : (x.score <= 2.5 ? 'weak' : '');
+      return '<div class="dim-row ' + cls + '">' +
+               '<span class="nm">' + x.name + '</span>' +
+               '<span class="bar"><i style="width:' + (x.score / 5 * 100) + '%"></i></span>' +
+               '<span class="vl">' + fmt(x.score) + '</span>' +
+             '</div>';
+    }).join('');
+    d.innerHTML =
+      '<div class="layer-head">' +
+        '<span class="layer-name">' + L.sub + ' · ' + L.name + '</span>' +
+        '<span class="layer-score">' + fmt(L.score) + '<small>分</small></span>' +
+      '</div>' + rows +
+      '<div class="interpret">' + interpret(L.key, L.score, sorted) + '</div>';
+    list.appendChild(d);
+  });
+
+  // 优势 / 成长
+  const allDims = Object.keys(dimScores).map(k => ({
+    key:k, name:dimMeta[k].name, score:dimScores[k], layer:dimMeta[k].layer
+  })).sort((a,b) => b.score - a.score);
+
+  const strengths = allDims.slice(0, 3);
+  const growth = allDims.slice(-3).reverse();
+
+  $('strengthList').innerHTML = strengths.map((d, i) =>
+    '<div class="tag-item s"><span class="rk">' + (i+1) + '</span>' +
+    '<span class="nm">' + d.name + '<span style="color:var(--muted);font-size:12.5px;"> · ' + d.layer + '</span></span>' +
+    '<span class="sc">' + fmt(d.score) + '</span></div>').join('');
+
+  $('growthList').innerHTML = growth.map((d, i) =>
+    '<div class="tag-item g"><span class="rk">' + (i+1) + '</span>' +
+    '<span class="nm">' + d.name + '<span style="color:var(--muted);font-size:12.5px;"> · ' + d.layer + '</span></span>' +
+    '<span class="sc">' + fmt(d.score) + '</span></div>').join('');
+
+  // 总结建议
+  const rootLow = (dimScores.attention + dimScores.resilience + dimScores.body + dimScores.mind) / 4 < 3;
+  const innerLow = (dimScores.awareness + dimScores.emotion + dimScores.drive + dimScores.care) / 4 < 3;
+  let advice = '';
+  advice += '<p style="margin:0 0 8px;">你的画像里，<b>' + strengths.map(d => d.name).join('、') +
+            '</b> 是最突出的三项——这是你目前最可以依靠的资源，也是你面对困难时最先能调用的力量。</p>';
+  advice += '<p style="margin:0 0 8px;">而 <b>' + growth.map(d => d.name).join('、') +
+            '</b> 相对偏低。它们平时可能不显眼，但会在压力大的时候最先失守，成为那个“卡住你”的地方。</p>';
+  advice += '<p style="margin:0 0 8px;">比较省力的路径，是用你擅长的 <b>' + strengths[0].name +
+            '</b> 去带动 <b>' + growth[0].name + '</b>：把新的练习搭在已有优势上，而不是从零开始硬扛。' +
+            '比如先只挑一个具体场景，做一次，再复盘一次。</p>';
+  if (rootLow || innerLow){
+    advice += '<p style="margin:0;">另外提醒一句：你的<b>' +
+              (rootLow ? '根基能力' : '') + (rootLow && innerLow ? '与' : '') + (innerLow ? '内在能力' : '') +
+              '</b>整体偏低。这两层是其他层级的地基——在能量和自我支持不足时谈执行与意义，往往会适得其反。' +
+              '先把睡眠、节奏和自我照顾补回来，上层能力才长得上去。</p>';
+  } else {
+    advice += '<p style="margin:0;">你的根基与内在都比较稳，这意味着你已经有条件去挑战更高层的事。' +
+              '接下来不妨把注意力放在<b>' + lowL.name + '</b>上，它会带来最大的边际收益。</p>';
+  }
+  $('adviceText').innerHTML = advice;
+
+  // 入口测评关联
+  renderEntryBox(dimScores);
+
+  // 切换
+  $('quizScreen').style.display = 'none';
+  $('resultScreen').style.display = 'block';
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* 长图导出：捕获整个结果区，弹出预览模态框，可下载 */
+function exportImage(srcBtn){
+  if (typeof html2canvas === 'undefined'){
+    alert('图片生成组件未加载，请确认 html2canvas.min.js 与本页面在同一目录。');
+    return;
+  }
+  const allBtns = document.querySelectorAll('.btn-export');
+  const saveHints = document.querySelectorAll('.save-hint');
+  const restartNav = document.querySelector('.restart-nav');
+  const prevTexts = Array.from(allBtns).map(b => b.textContent);
+  allBtns.forEach(b => { b.textContent = '生成中…'; b.disabled = true; b.style.visibility = 'hidden'; });
+  saveHints.forEach(h => h.style.visibility = 'hidden');
+  if (restartNav) restartNav.style.visibility = 'hidden';
+
+  const restore = () => {
+    saveHints.forEach(h => h.style.visibility = '');
+    if (restartNav) restartNav.style.visibility = '';
+    allBtns.forEach((b, i) => {
+      b.textContent = prevTexts[i] || '📸 保存我的测评结果（长图）';
+      b.disabled = false; b.style.visibility = '';
+    });
+  };
+
+  html2canvas($('resultScreen'), { backgroundColor:'#F4EFE9', scale:2, useCORS:true, logging:false }).then(canvas => {
+    restore();
+    $('imgPreview').src = canvas.toDataURL('image/png');
+    $('imgModal').style.display = 'flex';
+  }).catch(err => {
+    restore();
+    alert('生成图片失败：' + (err && err.message ? err.message : err));
+  });
+}
+document.querySelectorAll('.btn-export').forEach(b => { b.onclick = () => exportImage(b); });
+$('imgCloseBtn').onclick = () => { $('imgModal').style.display = 'none'; };
+$('imgModal').addEventListener('click', e => { if (e.target === $('imgModal')) $('imgModal').style.display = 'none'; });
+
+/* 二维码点击放大（微信内可长按识别） */
+$('qrBox').onclick = () => {
+  // 把占位 SVG 复制到模态框；如果是真实图片，复制 img
+  const src = $('qrBox').firstElementChild.cloneNode(true);
+  const target = $('qrPreview');
+  target.innerHTML = '';
+  if (src.tagName === 'IMG') {
+    const img = document.createElement('img');
+    img.src = src.src; img.alt = '扫码添加助教';
+    target.appendChild(img);
+  } else {
+    target.appendChild(src);
+  }
+  $('qrModal').style.display = 'flex';
+};
+$('qrCloseBtn').onclick = () => { $('qrModal').style.display = 'none'; };
+$('qrModal').addEventListener('click', e => { if (e.target === $('qrModal')) $('qrModal').style.display = 'none'; });
+
+$('restartBtn').onclick = () => {
+  answers = new Array(TOTAL).fill(null);
+  current = 0;
+  lastResult = null;
+  $('resultScreen').style.display = 'none';
+  $('introScreen').style.display = 'block';
+  window.scrollTo({ top:0, behavior:'smooth' });
+};
+</script>
+</body>
+</html>
