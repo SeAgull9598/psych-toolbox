@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>看见自己 · 前测问卷</title>
+<style>
+  :root{
+    --bg:#F4EFE9;
+    --card:#FFFDF9;
+    --gold:#C9A36A;
+    --gold-soft:#E9D9BE;
+    --sage:#9DB39A;
+    --sage-soft:#DCE7DA;
+    --ink:#4A4239;
+    --muted:#8A8073;
+    --line:#E7DFD2;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  .phone{
+    max-width:480px;
+    margin:0 auto;
+    min-height:100vh;
+    padding:28px 22px 48px;
+    display:flex;
+    flex-direction:column;
+  }
+  .screen{display:flex;flex-direction:column;flex:1;animation:fade .4s ease;}
+  .hidden{display:none !important;}
+  @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+  /* intro */
+  h1{
+    font-size:34px;font-weight:600;text-align:center;margin:0 0 6px;
+    letter-spacing:4px;color:var(--ink);
+  }
+  .purpose{
+    text-align:center;color:var(--muted);font-size:14px;
+    margin:0 auto 26px;max-width:340px;
+  }
+  .notice{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:22px 20px;
+    box-shadow:0 10px 30px rgba(150,130,100,.08);
+  }
+  .notice h2{
+    font-size:16px;margin:0 0 12px;color:var(--gold);
+    display:flex;align-items:center;gap:8px;
+  }
+  .notice h2::before{content:"🌿";font-size:16px;}
+  .notice p{margin:0;font-size:15px;color:var(--ink);}
+
+  /* buttons */
+  .btn-primary{
+    background:var(--gold);
+    color:#fff;
+    border:none;
+    border-radius:999px;
+    padding:15px 28px;
+    font-size:16px;
+    font-family:inherit;
+    cursor:pointer;
+    margin-top:26px;
+    width:100%;
+    box-shadow:0 8px 20px rgba(201,163,106,.28);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn-primary:active{transform:translateY(1px);}
+  .btn-primary:disabled{
+    background:var(--gold-soft);
+    box-shadow:none;
+    cursor:not-allowed;
+    color:#fff;
+  }
+  .btn-ghost{
+    background:transparent;
+    color:var(--muted);
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:13px 22px;
+    font-size:15px;
+    font-family:inherit;
+    cursor:pointer;
+  }
+  .btn-ghost:disabled{opacity:.4;cursor:not-allowed;}
+
+  /* quiz */
+  .quiz-top{margin-bottom:18px;}
+  .qcount{font-size:14px;color:var(--muted);margin-bottom:10px;text-align:center;}
+  .qcount b{color:var(--gold);font-size:17px;}
+  .progress{
+    height:8px;background:var(--sage-soft);border-radius:999px;overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;width:0;background:linear-gradient(90deg,var(--sage),var(--gold));
+    border-radius:999px;transition:width .35s ease;
+  }
+  .qpercent{font-size:12px;color:var(--muted);text-align:center;margin-top:8px;}
+
+  .qcard{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:30px 24px;
+    box-shadow:0 12px 34px rgba(150,130,100,.10);
+    flex:1;
+    display:flex;flex-direction:column;justify-content:center;
+  }
+  .qnum{font-size:13px;color:var(--sage);letter-spacing:1px;margin-bottom:14px;}
+  .qtext{font-size:20px;font-weight:500;line-height:1.65;margin-bottom:28px;color:var(--ink);}
+  .options{display:flex;flex-direction:column;gap:12px;}
+  .opt{
+    display:flex;align-items:center;gap:14px;
+    background:#fff;
+    border:1.5px solid var(--line);
+    border-radius:14px;
+    padding:15px 18px;
+    font-size:16px;color:var(--ink);
+    cursor:pointer;
+    transition:all .15s ease;
+    text-align:left;
+    font-family:inherit;
+  }
+  .opt .dot{
+    width:20px;height:20px;border-radius:50%;border:2px solid var(--gold-soft);
+    flex:0 0 auto;transition:all .15s ease;position:relative;
+  }
+  .opt.selected{
+    border-color:var(--sage);
+    background:var(--sage-soft);
+  }
+  .opt.selected .dot{
+    border-color:var(--sage);background:var(--sage);
+  }
+  .opt.selected .dot::after{
+    content:"";position:absolute;left:5px;top:5px;width:6px;height:6px;
+    border-radius:50%;background:#fff;
+  }
+  .quiz-nav{display:flex;gap:12px;margin-top:20px;}
+  .quiz-nav .btn-ghost{flex:0 0 auto;}
+  .quiz-nav .btn-primary{margin-top:0;flex:1;}
+
+  /* result */
+  .result-inner{display:flex;flex-direction:column;gap:26px;}
+  .block{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:24px 22px;
+    box-shadow:0 10px 28px rgba(150,130,100,.08);
+  }
+  .block h3{
+    font-size:15px;color:var(--gold);margin:0 0 14px;
+    letter-spacing:1px;display:flex;align-items:center;gap:8px;
+  }
+  .block p{margin:0;font-size:15.5px;color:var(--ink);}
+
+  .open-text{font-size:16.5px;line-height:1.8;}
+
+  .radar-wrap{display:flex;justify-content:center;margin:10px 0 4px;}
+  .radar-wrap svg{width:100%;max-width:340px;height:auto;display:block;}
+
+  .encourage-text{font-size:15.5px;line-height:1.85;}
+
+  .guide-text{font-size:14.5px;color:var(--ink);margin-bottom:14px;}
+  .save-btn{
+    background:var(--gold);color:#fff;border:none;border-radius:999px;
+    padding:14px 22px;font-size:15.5px;width:100%;cursor:pointer;
+    font-family:inherit;box-shadow:0 8px 20px rgba(201,163,106,.28);
+  }
+  .save-note{font-size:12.5px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.6;}
+  /* ---------- 联系助教（虚线框） ---------- */
+  .tutor-box{
+    margin-top:24px;text-align:center;
+    border:1.5px dashed var(--gold-soft);
+    border-radius:20px;
+    padding:26px 20px 24px;
+    background:#FDFBF7;
+  }
+  .tutor-box .tutor-title{
+    font-size:18px;font-weight:600;color:var(--ink);
+    letter-spacing:2px;margin:0 0 12px;
+  }
+  .tutor-box .tutor-desc{
+    font-size:14px;line-height:1.9;color:var(--muted);
+    margin:0 0 22px;
+  }
+  .qr-card{
+    width:264px;max-width:100%;margin:0 auto;
+    background:#fff;border:1px solid var(--line);border-radius:18px;
+    padding:16px 16px 14px;cursor:pointer;
+    box-shadow:0 8px 22px rgba(160,140,110,.12);
+    transition:transform .16s ease,box-shadow .16s ease;
+  }
+  .qr-card:active{transform:translateY(1px);box-shadow:0 4px 14px rgba(160,140,110,.16);}
+  .qr-head{display:flex;align-items:center;gap:9px;padding:0 2px;margin-bottom:14px;}
+  .qr-avatar{width:32px;height:32px;border-radius:8px;display:block;flex:0 0 auto;}
+  .qr-name{font-size:14px;color:var(--ink);}
+  .qr-img{width:100%;height:auto;display:block;border-radius:3px;}
+  .qr-cap{font-size:11.5px;color:#B9B2A6;margin-top:10px;letter-spacing:.3px;}
+  .tutor-box .tutor-strong{
+    font-size:15px;font-weight:600;color:var(--gold);
+    margin:20px 0 0;
+  }
+  .tutor-box .tutor-tip{
+    font-size:12.5px;color:var(--muted);
+    margin:8px 0 0;line-height:1.7;
+  }
+  .qr-magnify{
+    position:fixed;inset:0;background:rgba(60,52,42,.55);
+    display:none;align-items:center;justify-content:center;z-index:50;padding:30px;
+  }
+  .qr-magnify.show{display:flex;}
+  .qr-magnify .box{
+    background:#fff;border-radius:18px;padding:24px;max-width:330px;text-align:center;
+  }
+  .qr-magnify .big{width:264px;height:264px;margin:0 auto 14px;}
+  .qr-magnify .big img{width:100%;height:100%;display:block;border-radius:6px;}
+  .qr-magnify .close{margin-top:6px;color:var(--muted);font-size:13px;}
+
+  .retry-btn{
+    background:transparent;color:var(--muted);border:1.5px solid var(--line);
+    border-radius:999px;padding:13px 26px;font-size:15px;width:100%;
+    cursor:pointer;font-family:inherit;margin-top:4px;
+  }
+
+  @media print{
+    body{background:#fff;}
+    .phone{max-width:100%;}
+    .save-btn,.retry-btn,.qr-magnify{display:none !important;}
+    .tutor-box{background:#fff;}
+  }
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <!-- 一、介绍 / 填写须知 -->
+  <section id="intro" class="screen">
+    <h1>看见自己</h1>
+    <p class="purpose">在 7 天冥想体验营开始前，先来了解一下自己当前在觉察、情绪、自我态度与自我认知上的基线状态。</p>
+    <div class="notice">
+      <h2>填写须知</h2>
+      <p>这份问卷没有标准答案，它只是为了帮助你更清楚地了解自己目前的状态。所以只需根据你最近一个月的真实感受，选择最符合自己的选项，不需要过度思考，根据第一反应选择答案即可。所有题目均为选择题，选项从“完全不符合”到“完全符合”。</p>
+    </div>
+    <button class="btn-primary" id="startBtn">开始测评 →</button>
+  </section>
+
+  <!-- 二、问卷页 -->
+  <section id="quiz" class="screen hidden">
+    <div class="quiz-top">
+      <div class="qcount">第 <b id="qIndex">1</b> / 16 题</div>
+      <div class="progress"><div class="progress-fill" id="progFill"></div></div>
+      <div class="qpercent" id="qPercent">已完成 0%</div>
+    </div>
+    <div class="qcard">
+      <div class="qnum">Q<span id="qNum">1</span></div>
+      <div class="qtext" id="qText"></div>
+      <div class="options" id="options"></div>
+    </div>
+    <div class="quiz-nav">
+      <button class="btn-ghost" id="prevBtn">← 上一题</button>
+    </div>
+  </section>
+
+  <!-- 三、结果页 -->
+  <section id="result" class="screen hidden">
+    <div class="result-inner" id="resultInner"></div>
+  </section>
+
+</div>
+
+<!-- 二维码放大层 -->
+<div class="qr-magnify" id="qrMagnify">
+  <div class="box">
+    <div class="big"><img id="qrMagnifyImg" alt="助教二维码" /></div>
+    <div style="font-size:13.5px;color:var(--ink);">长按二维码识别，或截图后扫码添加</div>
+    <div class="close">轻触空白处关闭</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- 题目数据 ---------- */
+  // reverse: 反向计分题（第 3、8、9、11 题）
+  var questions = [
+    {dim:"觉察水平", reverse:false, text:"我对自己身体的状态比较清楚，比如知道自己是紧张还是放松。"},
+    {dim:"觉察水平", reverse:false, text:"当我有情绪的时候，我能知道自己正在经历什么情绪。"},
+    {dim:"觉察水平", reverse:true,  text:"我经常在做一件事做到一半的时候，才反应过来自己刚才在做什么。"},
+    {dim:"觉察水平", reverse:false, text:"当我发现自己走神的时候，我能重新回到刚才在做的事情上。"},
+
+    {dim:"情绪状态", reverse:false, text:"我平时的情绪比较平稳，不容易大起大落。"},
+    {dim:"情绪状态", reverse:false, text:"心情不好的时候，我总能找到一些方法让自己好受一点。"},
+    {dim:"情绪状态", reverse:false, text:"我允许自己在日常生活中偶尔有一些负面情绪，比如伤心、焦虑、生气。"},
+    {dim:"情绪状态", reverse:true,  text:"我心情不好的时候，容易做一些事后后悔的事。"},
+
+    {dim:"自我态度", reverse:true,  text:"当我做错事情的时候，我会更多地责怪自己，而不是安慰自己。"},
+    {dim:"自我态度", reverse:false, text:"我相信人无完人，所以我能接受自己有不完美的地方。"},
+    {dim:"自我态度", reverse:true,  text:"同样一件事，我对自己的要求比对他人的要求更严格。"},
+    {dim:"自我态度", reverse:false, text:"当我感到累的时候，我允许自己休息，而不是硬撑。"},
+
+    {dim:"自我认知", reverse:false, text:"我清楚自己的优点和缺点。"},
+    {dim:"自我认知", reverse:false, text:"我能说清楚自己的性格是什么样的。"},
+    {dim:"自我认知", reverse:false, text:"我知道在别人眼里，我是一个什么样的人。"},
+    {dim:"自我认知", reverse:false, text:"我能清楚地知道自己什么时候需要人陪，什么时候需要独处。"}
+  ];
+
+  var OPTIONS = ["完全不符合","比较不符合","一般","比较符合","完全符合"]; // 分值 1~5
+  var DIMENSIONS = [
+    {key:"觉察水平", items:[0,1,2,3]},
+    {key:"情绪状态", items:[4,5,6,7]},
+    {key:"自我态度", items:[8,9,10,11]},
+    {key:"自我认知", items:[12,13,14,15]}
+  ];
+
+  var answers = new Array(questions.length).fill(null); // 存原始选择 1~5
+  var current = 0;
+
+  /* ---------- DOM ---------- */
+  var intro = document.getElementById("intro");
+  var quiz  = document.getElementById("quiz");
+  var result= document.getElementById("result");
+  var qIndex= document.getElementById("qIndex");
+  var qNum  = document.getElementById("qNum");
+  var qText = document.getElementById("qText");
+  var optionsBox = document.getElementById("options");
+  var progFill = document.getElementById("progFill");
+  var qPercent = document.getElementById("qPercent");
+  var prevBtn = document.getElementById("prevBtn");
+  var startBtn= document.getElementById("startBtn");
+  var resultInner = document.getElementById("resultInner");
+  var qrMagnify = document.getElementById("qrMagnify");
+
+  /* ---------- 工具 ---------- */
+  function scoreOf(qi){
+    var raw = answers[qi];
+    if(raw===null) return null;
+    return questions[qi].reverse ? (6 - raw) : raw;
+  }
+  function dimScore(di){
+    var items = DIMENSIONS[di].items;
+    var sum=0;
+    items.forEach(function(i){ sum += scoreOf(i); });
+    return sum / items.length;
+  }
+  function totalScore(){
+    var s=0;
+    DIMENSIONS.forEach(function(_,i){ s+=dimScore(i); });
+    return s / DIMENSIONS.length;
+  }
+
+  /* ---------- 渲染：问卷页 ---------- */
+  function renderQuestion(){
+    var q = questions[current];
+    qIndex.textContent = current+1;
+    qNum.textContent = current+1;
+    qText.textContent = q.text;
+
+    optionsBox.innerHTML = "";
+    OPTIONS.forEach(function(label, idx){
+      var val = idx+1;
+      var btn = document.createElement("button");
+      btn.className = "opt" + (answers[current]===val ? " selected" : "");
+      btn.innerHTML = '<span class="dot"></span><span>'+label+'</span>';
+      btn.onclick = function(){
+        answers[current] = val;
+        Array.prototype.forEach.call(optionsBox.children, function(c){ c.classList.remove("selected"); });
+        btn.classList.add("selected");
+        scheduleAdvance();
+      };
+      optionsBox.appendChild(btn);
+    });
+
+    prevBtn.style.display = (current===0) ? "none" : "";
+
+    updateProgress();
+  }
+
+  function updateProgress(){
+    var answered = answers.filter(function(a){return a!==null;}).length;
+    var pct = Math.round(answered / questions.length * 100);
+    progFill.style.width = pct + "%";
+    qPercent.textContent = "已完成 " + pct + "%";
+  }
+
+  prevBtn.onclick = function(){
+    if(current>0){ current--; renderQuestion(); }
+  };
+
+  var advanceTimer = null;
+  function scheduleAdvance(){
+    if(advanceTimer) clearTimeout(advanceTimer);
+    var isLast = (current === questions.length-1);
+    advanceTimer = setTimeout(function(){
+      if(isLast){ showResult(); }
+      else { current++; renderQuestion(); }
+    }, isLast ? 420 : 280);
+  }
+
+  /* ---------- 雷达图（标签含分数，竖排两行，留足边距避免裁切） ---------- */
+  function radarInner(scores, size){
+    var cx=size/2, cy=size/2;
+    var maxR = size*0.255;
+    var off  = size*0.075;
+    var n=4;
+    function ang(i){ return (-90 + i*90) * Math.PI/180; }
+    var rings="";
+    for(var r=1;r<=5;r++){
+      var pts=[];
+      for(var i=0;i<n;i++){ var a=ang(i); pts.push((cx+Math.cos(a)*maxR*r/5).toFixed(1)+","+(cy+Math.sin(a)*maxR*r/5).toFixed(1)); }
+      rings+='<polygon points="'+pts.join(" ")+'" fill="none" stroke="#E7DFD2" stroke-width="1"/>';
+    }
+    var axes="";
+    for(var i2=0;i2<n;i2++){ var a2=ang(i2); axes+='<line x1="'+cx+'" y1="'+cy+'" x2="'+(cx+Math.cos(a2)*maxR).toFixed(1)+'" y2="'+(cy+Math.sin(a2)*maxR).toFixed(1)+'" stroke="#E7DFD2" stroke-width="1"/>'; }
+    var dpts=[];
+    for(var i3=0;i3<n;i3++){ var a3=ang(i3); var rr=maxR*scores[i3]/5; dpts.push((cx+Math.cos(a3)*rr).toFixed(1)+","+(cy+Math.sin(a3)*rr).toFixed(1)); }
+    var poly='<polygon points="'+dpts.join(" ")+'" fill="rgba(157,179,154,0.35)" stroke="#9DB39A" stroke-width="2"/>';
+    var dots=dpts.map(function(p){ var xy=p.split(","); return '<circle cx="'+xy[0]+'" cy="'+xy[1]+'" r="3" fill="#9DB39A"/>'; }).join("");
+    var labels=["觉察水平","情绪状态","自我态度","自我认知"];
+    var lbls="";
+    var lf=(size*0.036).toFixed(1);
+    for(var i4=0;i4<n;i4++){
+      var a4=ang(i4);
+      var lx=cx+Math.cos(a4)*(maxR+off);
+      var ly=cy+Math.sin(a4)*(maxR+off);
+      var anchor="middle"; if(Math.cos(a4)>0.1)anchor="start"; else if(Math.cos(a4)<-0.1)anchor="end";
+      var nameY  = ly - size*0.020;
+      var scoreY = ly + size*0.028;
+      lbls+='<text x="'+lx.toFixed(1)+'" y="'+nameY.toFixed(1)+'" text-anchor="'+anchor+'" dominant-baseline="middle" font-size="'+lf+'" fill="#7A6F5D">'+labels[i4]+'</text>';
+      lbls+='<text x="'+lx.toFixed(1)+'" y="'+scoreY.toFixed(1)+'" text-anchor="'+anchor+'" dominant-baseline="middle" font-size="'+lf+'" fill="#9DB39A" font-weight="600">'+scores[i4].toFixed(1)+' 分</text>';
+    }
+    return rings+axes+poly+dots+lbls;
+  }
+  function radarSVG(scores, size){
+    size = size || 360;
+    return '<svg viewBox="0 0 '+size+' '+size+'" xmlns="http://www.w3.org/2000/svg">'+radarInner(scores,size)+'</svg>';
+  }
+
+  /* ---------- 助教二维码 / 头像（Base64 内联，换图只需替换这两个常量） ---------- */
+  var QR_IMG = "data:image/png;base64,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";
+  var AVATAR_IMG = "data:image/jpeg;base64,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";
+  var QR_NAME = "Layla";
+
+  /* 导出长图时需要额外绘制的位图（头像、二维码由 canvas 绘制） */
+  var EXPORT_IMAGES = [];
+
+  /* ---------- 渲染：结果页 ---------- */
+  function showResult(){
+    var total = totalScore();
+    var dimScores = DIMENSIONS.map(function(_,i){ return dimScore(i); });
+
+    var html = '';
+
+    // 开场语 + 蛛网图（合并为一个框，无小标题，无总分）
+    html += '<div class="block">'+
+            '<p class="open-text">恭喜你迈出了 <b>了解与探索自我</b> 的第一步。这是你现在的起点。7 天之后，我们再来看一次。</p>'+
+            '<div class="radar-wrap">'+radarSVG(dimScores,360)+'</div></div>';
+
+    // 鼓励与展望（无小标题）
+    html += '<div class="block"><p class="encourage-text">接下来的 7 天，我们会一起做一些简单的练习。每天只需要 20 分钟，你不需要做任何准备，只需要跟着引导就好。7 天之后，我们再来看看你的状态会有什么变化。不管变化是大是小，只要你愿意开始，就已经在往前走了。</p></div>';
+
+    // 保存截图 + 联系助教
+    html += '<div class="block">'+
+            '<p class="guide-text">退出后无法再次查看结果，请及时导出并保存。</p>'+
+            '<button class="save-btn" id="saveBtn">📸 保存结果截图</button>'+
+            '<div class="tutor-box">'+
+              '<div class="tutor-title">联系助教</div>'+
+              '<p class="tutor-desc">记得把结果截图发送给助教进行登记哟～</p>'+
+              '<div class="qr-card" id="qrCard">'+
+                '<div class="qr-head">'+
+                  '<img class="qr-avatar" src="'+AVATAR_IMG+'" alt="助教头像" />'+
+                  '<span class="qr-name">'+QR_NAME+'</span>'+
+                '</div>'+
+                '<img class="qr-img" src="'+QR_IMG+'" alt="助教微信二维码" />'+
+                '<div class="qr-cap">扫二维码，添加我为朋友。</div>'+
+              '</div>'+
+              '<div class="tutor-strong">扫码添加助教，把结果图发给他</div>'+
+              '<div class="tutor-tip">轻触二维码可放大，放大后长按即可识别添加</div>'+
+            '</div></div>';
+
+    html += '<button class="retry-btn" id="retryBtn">重新测评</button>';
+
+    resultInner.innerHTML = html;
+
+    document.getElementById("saveBtn").onclick = function(){ exportPNG(total, dimScores); };
+    document.getElementById("retryBtn").onclick = resetAll;
+    document.getElementById("qrMagnifyImg").src = QR_IMG;
+    document.getElementById("qrCard").onclick = function(){ qrMagnify.classList.add("show"); };
+
+    quiz.classList.add("hidden");
+    result.classList.remove("hidden");
+    window.scrollTo(0,0);
+  }
+
+  /* ---------- 导出长图（自包含，离线可用） ---------- */
+  // 简易禁则处理：不让标点落在行首，也不从数字/字母中间断开（"20" 不会被拆成 "2"+"0"）
+  var NO_LINE_START = "，。、；：！？）】》」』”’%‰℃…·,.;:!?)]}";
+  function wrapText(s, max){
+    var lines=[], cur="";
+    for(var i=0;i<s.length;i++){
+      cur+=s[i];
+      var next=s[i+1], prev=cur.charAt(cur.length-1), bad=false;
+      if(next){
+        if(NO_LINE_START.indexOf(next)!==-1 || next===" " || next==="\u3000") bad=true;
+        else if(/[0-9A-Za-z]/.test(prev) && /[0-9A-Za-z]/.test(next)) bad=true;
+      }
+      if(cur.length>=max && !bad){ lines.push(cur); cur=""; }
+    }
+    if(cur) lines.push(cur);
+    return lines;
+  }
+  function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+  function composeResultSVG(total, dimScores){
+    var W=600, pad=42, y=pad, parts=[];
+    EXPORT_IMAGES = [];
+    // 注意：导出 SVG 按 XML 解析，属性值内必须用单引号，否则整个长图导出会失败
+    var FF="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif";
+    function text(str,size,color,weight,max,lineH){
+      var lines=wrapText(str,max);
+      lines.forEach(function(l){
+        parts.push('<text x="'+pad+'" y="'+y+'" font-family="'+FF+'" font-size="'+size+'" fill="'+color+'" font-weight="'+(weight||400)+'">'+esc(l)+'</text>');
+        y+=lineH;
+      });
+      y+=4;
+    }
+    function rule(){ parts.push('<line x1="'+pad+'" y1="'+y+'" x2="'+(W-pad)+'" y2="'+y+'" stroke="#E7DFD2" stroke-width="1"/>'); y+=24; }
+
+    // 标题
+    parts.push('<text x="'+pad+'" y="'+y+'" font-family="'+FF+'" font-size="26" fill="#4A4239" font-weight="600">看见自己 · 前测起点</text>');
+    y+=40; rule();
+
+    // 开场语
+    text("恭喜你迈出了 了解与探索自我 的第一步。这是你现在的起点。7 天之后，我们再来看一次。",15,"#4A4239",400,30,24);
+    y+=14;
+
+    // 蛛网图（含分数标注，无总分、无维度列表）
+    var radarSize=300, rx=(W-radarSize)/2;
+    parts.push('<svg x="'+rx+'" y="'+y+'" width="'+radarSize+'" height="'+radarSize+'">'+radarInner(dimScores,radarSize)+'</svg>');
+    y += radarSize + 24;
+
+    // 鼓励与展望
+    text("接下来的 7 天，我们会一起做一些简单的练习。每天只需要 20 分钟，你不需要做任何准备，只需要跟着引导就好。7 天之后，我们再来看看你的状态会有什么变化。不管变化是大是小，只要你愿意开始，就已经在往前走了。",15,"#4A4239",400,30,24);
+    y+=14;
+
+    // 联系助教（虚线框 + 二维码卡片，与页面样式一致）
+    var boxX=pad, boxW=W-pad*2, boxTop=y, boxPad=24;
+    var innerX=boxX+boxPad, innerW=boxW-boxPad*2;
+    var cy2=boxTop+38;
+
+    // 标题
+    parts.push('<text x="'+(W/2)+'" y="'+cy2+'" text-anchor="middle" font-family="'+FF+'" font-size="17" font-weight="600" fill="#4A4239">联系助教</text>');
+    cy2+=30;
+
+    // 说明文案（居中折行）
+    var descLines=wrapText("记得把结果截图发送给助教进行登记哟～", Math.floor(innerW/15));
+    descLines.forEach(function(l){ parts.push('<text x="'+(W/2)+'" y="'+cy2+'" text-anchor="middle" font-family="'+FF+'" font-size="14" fill="#8A8073">'+esc(l)+'</text>'); cy2+=24; });
+    cy2+=16;
+
+    // 白色二维码卡片
+    var cardW=216, cardX=(W-cardW)/2, cardPad=18, cardTop=cy2;
+    var qrSize=cardW-cardPad*2;          // 180
+    var avSize=30, avTop=cardTop+cardPad;
+    var qrTop=avTop+avSize+14;
+    var capY=qrTop+qrSize+21;
+    var cardH=capY-cardTop+8;
+    parts.push('<rect x="'+cardX+'" y="'+cardTop+'" width="'+cardW+'" height="'+cardH+'" rx="16" fill="#FFFFFF" stroke="#E7DFD2" stroke-width="1"/>');
+    parts.push('<text x="'+(cardX+cardPad+avSize+10)+'" y="'+(avTop+avSize/2)+'" dominant-baseline="middle" font-family="'+FF+'" font-size="14" fill="#4A4239">'+esc(QR_NAME)+'</text>');
+    parts.push('<text x="'+(W/2)+'" y="'+capY+'" text-anchor="middle" font-family="'+FF+'" font-size="11" fill="#B9B2A6">扫二维码，添加我为朋友。</text>');
+    // 头像与二维码：交给 canvas 绘制（exportPNG 读取 EXPORT_IMAGES）
+    EXPORT_IMAGES.push({x:cardX+cardPad, y:avTop, w:avSize, h:avSize, src:AVATAR_IMG, r:8});
+    EXPORT_IMAGES.push({x:cardX+cardPad, y:qrTop, w:qrSize, h:qrSize, src:QR_IMG, r:3});
+
+    cy2 = cardTop+cardH+26;
+    parts.push('<text x="'+(W/2)+'" y="'+cy2+'" text-anchor="middle" font-family="'+FF+'" font-size="15" font-weight="600" fill="#C9A36A">扫码添加助教，把结果图发给他</text>');
+    cy2+=25;
+    parts.push('<text x="'+(W/2)+'" y="'+cy2+'" text-anchor="middle" font-family="'+FF+'" font-size="12.5" fill="#8A8073">轻触二维码可放大，放大后长按即可识别添加</text>');
+    cy2+=28;
+
+    // 虚线外框（先画，置于内容之下）
+    parts.unshift('<rect x="'+boxX+'" y="'+boxTop+'" width="'+boxW+'" height="'+(cy2-boxTop)+'" rx="18" fill="#FDFBF7" stroke="#E9D9BE" stroke-width="1.5" stroke-dasharray="7 6"/>');
+
+    y = cy2+14;
+
+    // 落款
+    parts.push('<text x="'+pad+'" y="'+y+'" font-family="'+FF+'" font-size="12" fill="#B6AB98">本结果由「看见自己」前测问卷生成 · 仅作自我探索参考</text>');
+    y+=pad;
+
+    var H=y;
+    return '<svg xmlns="http://www.w3.org/2000/svg" width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'">'+
+           '<rect width="'+W+'" height="'+H+'" fill="#F4EFE9"/>'+parts.join("")+'</svg>';
+  }
+
+  function roundRectPath(ctx,x,y,w,h,r){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);
+    ctx.arcTo(x+w,y,x+w,y+h,r);
+    ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r);
+    ctx.arcTo(x,y,x+w,y,r);
+    ctx.closePath();
+  }
+
+  function exportPNG(total, dimScores){
+    try{
+      var svgStr = composeResultSVG(total, dimScores);
+      var bitmaps = EXPORT_IMAGES.slice();
+      var blob = new Blob([svgStr], {type:"image/svg+xml;charset=utf-8"});
+      var url = URL.createObjectURL(blob);
+      var img = new Image();
+      img.onload = function(){
+        var scale=2;
+        var canvas=document.createElement("canvas");
+        canvas.width = Math.round(img.width*scale);
+        canvas.height= Math.round(img.height*scale);
+        var ctx=canvas.getContext("2d");
+        ctx.scale(scale,scale);
+        ctx.drawImage(img,0,0);
+
+        var pending = bitmaps.length, failed=false;
+        function finish(){
+          if(failed){ fallbackPrint(); return; }
+          if(--pending > 0) return;
+          try{
+            canvas.toBlob(function(b){
+              if(!b){ fallbackPrint(); return; }
+              var a=document.createElement("a");
+              a.href=URL.createObjectURL(b);
+              a.download="看见自己-前测结果.png";
+              document.body.appendChild(a); a.click(); document.body.removeChild(a);
+              setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+            }, "image/png");
+          }catch(err){ fallbackPrint(); }
+        }
+        if(!bitmaps.length){ finish(); return; }
+        bitmaps.forEach(function(it){
+          var bm=new Image();
+          bm.onload=function(){
+            ctx.save();
+            if(it.r){ roundRectPath(ctx,it.x,it.y,it.w,it.h,it.r); ctx.clip(); }
+            ctx.drawImage(bm,it.x,it.y,it.w,it.h);
+            ctx.restore();
+            finish();
+          };
+          bm.onerror=function(){ failed=true; finish(); };
+          bm.src=it.src;
+        });
+      };
+      img.onerror = function(){ fallbackPrint(); };
+      img.src = url;
+    }catch(e){
+      fallbackPrint();
+    }
+  }
+  function fallbackPrint(){
+    alert("图片导出不可用，已为你打开打印/保存窗口，可选择“另存为 PDF”或截图保存。");
+    window.print();
+  }
+
+  /* ---------- 流程控制 ---------- */
+  startBtn.onclick = function(){
+    intro.classList.add("hidden");
+    quiz.classList.remove("hidden");
+    current=0;
+    renderQuestion();
+    window.scrollTo(0,0);
+  };
+
+  qrMagnify.onclick = function(){ qrMagnify.classList.remove("show"); };
+
+  function resetAll(){
+    if(advanceTimer) clearTimeout(advanceTimer);
+    answers = new Array(questions.length).fill(null);
+    current=0;
+    result.classList.add("hidden");
+    intro.classList.remove("hidden");
+    window.scrollTo(0,0);
+  }
+
+})();
+</script>
+</body>
+</html>
