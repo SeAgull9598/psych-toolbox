@@ -1,22 +1,24 @@
-# 心理工具箱
+# 易思心理一轮内测
 
-三款独立的在线测评工具：定位测评、能力画像与看见自己前测问卷。保留原站的题目、评分逻辑、结果文案和样式，并提供统一入口。
+心理成长产品的首轮内测入口，包含体验官介绍、三款测评和反馈问卷。测评按“看见自己 → 自我探索（原定位测评）→ 能力画像”的顺序排列，保留原站的题目与评分逻辑。
 
 ## 访问网址
 
-- [心理工具箱](https://seagull9598.github.io/psych-toolbox/)
-- [定位测评](https://seagull9598.github.io/psych-toolbox/positioning.html)
+- [易思心理一轮内测](https://seagull9598.github.io/psych-toolbox/)
+- [自我探索（原定位测评）](https://seagull9598.github.io/psych-toolbox/positioning.html)
 - [能力画像](https://seagull9598.github.io/psych-toolbox/capability.html)
 - [看见自己 · 前测问卷](https://seagull9598.github.io/psych-toolbox/self-awareness.html)
 
 ## 使用
 
+先阅读首页的体验官介绍，依次完成三份测评，保存结果并记录各测评用时。每份测评结果页的“返回首页”按钮会回到首页的测评入口区域，最后填写[反馈问卷](https://v.wjx.cn/vm/ehKc2xZ.aspx#)。
+
 选择工具，阅读填写须知，逐题作答后查看结果。结果页支持生成长图，供自行保存。测评仅用于自我探索与成长参考，不构成诊断。
 
 ## 文件与维护
 
-- `index.html`：统一入口。
-- `positioning.html`：定位测评。
+- `index.html`：体验官介绍、按顺序排列的测评入口与反馈问卷链接。
+- `positioning.html`：自我探索（原定位测评）。
 - `capability.html`：能力画像。
 - `self-awareness.html`：看见自己前测问卷，16 道题涵盖觉察水平、情绪状态、自我态度与自我认知，供 7 天冥想体验营开始前记录基线状态。
 - 定位测评与能力画像共用原站的 `qrcode.jpg` 和长图导出组件 `html2canvas.min.js`。
@@ -36,5 +38,5 @@
 - 看见自己 · 前测问卷：https://5357f3d54b9f4b9a9da58bf076efa1bb.app.workbuddy.host
 - html2canvas 1.4.1：https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js （MIT License，许可声明保留于文件头）。
 
-定位测评与能力画像的两个二维码均从对应原站取得，并核验为相同图片；两份测评 HTML 保留原始内容，长图组件采用公开标准发行版补齐。看见自己前测问卷完整保留所提供原网页的内容、样式、评分逻辑、内嵌二维码与结果导出功能。
+定位测评与能力画像的两个二维码均从对应原站取得，并核验为相同图片；长图组件采用公开标准发行版补齐。看见自己前测问卷保留所提供原网页的题目、样式、评分逻辑、内嵌二维码与结果导出功能。三份测评均增设结果页返回入口，自我探索的显示名称已统一。
 

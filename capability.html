@@ -201,6 +201,13 @@
   .qr-modal-box img, .qr-modal-box svg{width:min(68vw,280px);height:min(68vw,280px);object-fit:contain;display:block;border-radius:8px;}
   .qr-modal-close{background:var(--accent);color:#fff;border:none;border-radius:12px;padding:10px 36px;font-size:15px;cursor:pointer;font-family:inherit;font-weight:600;transition:all .18s;}
   .qr-modal-close:hover{background:var(--accent-deep);}
+
+  .return-home-wrap{margin:22px 0 0;text-align:center;}
+  .return-home-wrap p{margin:0 0 10px;font-size:13px;color:#817a70;}
+  .return-home{display:block;width:100%;padding:13px 22px;border:1.5px solid #d7cbbb;border-radius:999px;color:#8a6d3f;background:transparent;font-family:inherit;font-size:15px;text-align:center;text-decoration:none;line-height:1.6;}
+  .return-home:hover{background:#fbf3e6;}
+  .return-home:focus-visible{outline:2px solid #8a6d3f;outline-offset:4px;}
+  @media print{.return-home-wrap{display:none !important;}}
 </style>
 </head>
 <body>
@@ -308,9 +315,9 @@
       <div class="summary-text" id="adviceText" style="margin-top:18px;"></div>
     </div>
 
-    <!-- D. 与心理工具箱·定位测评的关联 -->
+    <!-- D. 与自我探索的关联 -->
     <div class="card section">
-      <div class="section-title">心理工具箱·定位测评</div>
+      <div class="section-title">自我探索</div>
       <div class="note-box" id="entryBox"></div>
     </div>
 
@@ -336,6 +343,10 @@
       <button class="btn btn-primary" id="restartBtn">重新测评</button>
     </div>
 
+    <div class="return-home-wrap" data-html2canvas-ignore="true">
+      <p>返回前请先保存本次测评结果。</p>
+      <a class="return-home" href="./index.html#assessments">← 返回首页</a>
+    </div>
     <p class="footer-note">本测评仅用于自我探索与成长参考，不构成任何诊断或评价。<br/>能力是可以被练习的，画像只是此刻的快照，不是终点。</p>
   </div>
 
@@ -750,7 +761,7 @@ function renderEntryBox(dimScores){
   const box = $('entryBox');
   const preset = readEntryIssue();
 
-  let html = '<div style="margin-bottom:12px;">在心理工具箱·定位测评中，最困扰你的一项是什么？选择后可获得更加完整的成长建议。</div>';
+  let html = '<div style="margin-bottom:12px;">在自我探索中，最困扰你的一项是什么？选择后可获得更加完整的成长建议。</div>';
   html += '<select class="entry-sel" id="entrySel">' +
             '<option value="">' + (preset ? '重新选择其他问题…' : '请选择最困扰你的一项…') + '</option>' +
             ENTRY_ISSUES.map(i => '<option value="' + i.label + '"' + (preset && preset.label === i.label ? ' selected' : '') + '>' + i.label + '</option>').join('') +

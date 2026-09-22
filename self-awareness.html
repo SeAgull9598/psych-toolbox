@@ -240,6 +240,13 @@
     .save-btn,.retry-btn,.qr-magnify{display:none !important;}
     .tutor-box{background:#fff;}
   }
+
+  .return-home-wrap{margin:22px 0 0;text-align:center;}
+  .return-home-wrap p{margin:0 0 10px;font-size:13px;color:#817a70;}
+  .return-home{display:block;width:100%;padding:13px 22px;border:1.5px solid #d7cbbb;border-radius:999px;color:#8a6d3f;background:transparent;font-family:inherit;font-size:15px;text-align:center;text-decoration:none;line-height:1.6;}
+  .return-home:hover{background:#fbf3e6;}
+  .return-home:focus-visible{outline:2px solid #8a6d3f;outline-offset:4px;}
+  @media print{.return-home-wrap{display:none !important;}}
 </style>
 </head>
 <body>
@@ -276,6 +283,10 @@
   <!-- 三、结果页 -->
   <section id="result" class="screen hidden">
     <div class="result-inner" id="resultInner"></div>
+    <div class="return-home-wrap" data-html2canvas-ignore="true">
+      <p>返回前请先保存本次测评结果。</p>
+      <a class="return-home" href="./index.html#assessments">← 返回首页</a>
+    </div>
   </section>
 
 </div>
